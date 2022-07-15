@@ -1,5 +1,9 @@
 package neuralnet
 
+import (
+	"math/rand"
+)
+
 type layer struct {
 	neurons int
 	in      *layer
@@ -34,6 +38,15 @@ func (this *layer) linkIn(other *layer) {
 	this.in = other
 	for j := range this.w {
 		this.w[j] = make([]float64, other.neurons)
+	}
+}
+
+func (l *layer) randomize() {
+	for j := 0; j < l.neurons; j++ {
+		l.b[j] = 0
+		for k := range l.w[j] {
+			l.w[j][k] = (rand.Float64() - .5) * .3
+		}
 	}
 }
 

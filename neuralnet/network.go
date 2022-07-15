@@ -15,7 +15,15 @@ func NewNetwork(neurons []int) *Network {
 		layers:  newLayers(neurons),
 	}
 
+	n.Randomize()
+
 	return n
+}
+
+func (n *Network) Randomize() {
+	for _, l := range n.layers {
+		l.randomize()
+	}
 }
 
 func (n *Network) Compute(x []float64) (y []float64) {
