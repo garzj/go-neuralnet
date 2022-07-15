@@ -1,14 +1,14 @@
 package neuralnet
 
 type Gradient struct {
+	layers  []*layer
 	dLayers []*layer
-	network *Network
 }
 
-func newGradient(network *Network, y []float64) *Gradient {
+func newGradient(neurons []int, layers []*layer, y []float64) *Gradient {
 	g := &Gradient{
-		network: network,
-		dLayers: newLayers(network.neurons),
+		layers:  layers,
+		dLayers: newLayers(neurons),
 	}
 
 	g.compute(y)
@@ -18,7 +18,7 @@ func newGradient(network *Network, y []float64) *Gradient {
 
 func (g *Gradient) compute(y []float64) {
 	// last layer activations
-	lastNl := g.network.layers[len(g.network.layers)-1]
+	lastNl := g.layers[len(g.layers)-1]
 	if len(lastNl.a) != len(y) {
 		panic("insufficient amount of y values")
 	}
@@ -29,9 +29,9 @@ func (g *Gradient) compute(y []float64) {
 	}
 
 	// all but first layer
-	for l := len(g.network.layers) - 1; l >= 1; l-- {
-		nl := g.network.layers[l]
-		prevNl := g.network.layers[l-1]
+	for l := len(g.layers) - 1; l >= 1; l-- {
+		nl := g.layers[l]
+		prevNl := g.layers[l-1]
 		dl := g.dLayers[l]
 		prevDl := g.dLayers[l-1]
 
