@@ -34,6 +34,29 @@ func newLayers(neurons []int) []*layer {
 	return layers
 }
 
+func copyLayers(neurons []int, src []*layer) []*layer {
+	dest := make([]*layer, len(src))
+	for l := range dest {
+		dest[l] = newLayer(neurons[l])
+
+		destL := dest[l]
+		srcL := src[l]
+
+		if l > 0 {
+			destL.in = dest[l-1]
+		}
+
+		copy(destL.a, srcL.a)
+		copy(destL.b, srcL.b)
+
+		for j := range destL.w {
+			destL.w[j] = make([]float64, len(srcL.w[j]))
+			copy(destL.w[j], srcL.w[j])
+		}
+	}
+	return dest
+}
+
 func (this *layer) linkIn(other *layer) {
 	this.in = other
 	for j := range this.w {
